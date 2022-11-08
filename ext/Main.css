@@ -32,12 +32,37 @@ h3 {
   margin: 0.25rem;
 }
 
+.nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  background: #212121;
+  color: #fff;
+  padding: 8px 24px;
+  min-height: 40px;
+  height: 100%;
+  filter: drop-shadow(0 0 0.25rem gray);
+}
+
 .logo {
-  margin: 0.5rem 0;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo img {
-  max-height: 100px;
+  height: 40px;
+  margin-right: 0.5rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #fc0;
+  margin: 0 0.5rem;
 }
 
 .welcome-title {
@@ -79,7 +104,6 @@ h3 {
   background-color: none;
 }
 
-
 button:hover {
   background-color: #bf9900;
   color: #f4f4f4;
@@ -92,7 +116,7 @@ form {
   flex-direction: column;
   /* justify-content: center; */
   /* align-items: center; */
-  width:  300px;
+  width: 300px;
 }
 
 form input {
@@ -104,7 +128,7 @@ form input {
 }
 
 form input:disabled {
-   border: 2px solid red;
+  border: 2px solid red;
 }
 
 form label {

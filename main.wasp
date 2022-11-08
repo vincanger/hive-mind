@@ -4,7 +4,8 @@ app HiveMind {
     system: PostgreSQL
   },
   dependencies: [
-    ("nodemailer", "^6.8.0")
+    ("nodemailer", "^6.8.0"),
+    ("react-icons", "^4.6.0"),
   ]
 }
 
@@ -19,6 +20,7 @@ job emailSender {
   entities: [Task]
 }
 
+// [] or ? -- Note: You cannot combine type modifiers - optional lists are not supported.
 entity Task {=psl
     id          Int       @id @default(autoincrement())
     createdAt   DateTime  @default(now())
@@ -28,12 +30,17 @@ entity Task {=psl
     message     String
     email       String
     deadline    String
-    recurring   Int[]?
+    recurring   Int[]
 psl=}
 
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
   component: import Main from "@ext/MainPage.js"
+}
+
+route About { path: "/about", to: AboutPage }
+page AboutPage {
+  component: import About from "@ext/AboutPage.js"
 }
 
 action createTask {

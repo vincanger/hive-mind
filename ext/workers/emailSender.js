@@ -17,18 +17,23 @@ export async function workerFunction(args, context) {
   const recurringTasks = await context.entities.Task.findMany({
     where: {
       recurring: {
-        has: 1,
-      }
+        has: currentDay,
+      },
+      status: 'pending',
     }
   });
 
   const allTasks = [...deadlinedTasks, ...recurringTasks];
-  console.log('all tasks', allTasks);
+  if (allTasks.length === 0) {
+    console.log('No tasks to send emails for!');
+    return;
+  }
 
   return Promise.all(allTasks.map(async(task) => {
+    await sendEmail(task);
     const completeTask = await markAsCompleted(task, context);
-    console.log('complete task', completeTask);
-    return sendEmail(task);
+    console.log('Sent email for task: ', completeTask);
+    return;
   }))
 }
 
