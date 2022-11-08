@@ -35,3 +35,8 @@ route RootRoute { path: "/", to: MainPage }
 page MainPage {
   component: import Main from "@ext/MainPage.js"
 }
+
+action createTask {
+  fn: import { createTask } from "@ext/actions.js",
+  entities: [Task]
+}

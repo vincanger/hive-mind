@@ -25,12 +25,14 @@ export async function workerFunction(args, context) {
   const allTasks = [...deadlinedTasks, ...recurringTasks];
   console.log('all tasks', allTasks);
 
-  return Promise.all(allTasks.map(task => {
+  return Promise.all(allTasks.map(async(task) => {
+    const completeTask = await markAsCompleted(task, context);
+    console.log('complete task', completeTask);
     return sendEmail(task);
   }))
 }
 
-export async function sendEmail({ email, message, name }) {
+export async function sendEmail(task) {
   const testAccount = await nodemailer.createTestAccount();
 
   const transporter = nodemailer.createTransport({
@@ -45,10 +47,21 @@ export async function sendEmail({ email, message, name }) {
 
   const info = await transporter.sendMail({
     from: '"HiveMind" <hive.mind@example.com>',
-    to: email,
-    subject: `Task Reminder -- ${name}`,
-    html: `${message}`,
+    to: task.email,
+    subject: `Task Reminder -- ${task.name}`,
+    html: `${task.message}`,
   });
 
   console.log(`Email URL: ${nodemailer.getTestMessageUrl(info)}`);
+}
+
+async function markAsCompleted(task, context) {
+  return await context.entities.Task.update({
+    where: {
+      id: task.id,
+    },
+    data: {
+      status: 'completed',
+    },
+  });
 }
