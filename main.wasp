@@ -1,0 +1,37 @@
+app HiveMind {
+  title: "HiveMind",
+  db: {
+    system: PostgreSQL
+  },
+  dependencies: [
+    ("nodemailer", "^6.8.0")
+  ]
+}
+
+job emailSender {
+  executor: PgBoss, 
+  perform: {
+    fn: import { workerFunction } from "@ext/workers/emailSender.js"
+  },
+  schedule: {
+    cron: "* * * * *" // every minute
+  },
+  entities: [Task]
+}
+
+entity Task {=psl
+    id          Int       @id @default(autoincrement())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime? @updatedAt  
+    name        String    @unique
+    status      String    @default("pending")
+    message     String
+    email       String
+    deadline    String
+    recurring   Int[]?
+psl=}
+
+route RootRoute { path: "/", to: MainPage }
+page MainPage {
+  component: import Main from "@ext/MainPage.js"
+}
