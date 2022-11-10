@@ -1,9 +1,9 @@
 import nodemailer from 'nodemailer';
 
 export async function workerFunction(args, context) {
-  console.log('\n::: Pending Tasks Worker Function - Begin :::', args, context, "\n");
-  const currentDay = new Date().getDay();                 // e.g. 1 (Monday), 2 (Tuesday), etc.
-  const currentDate = new Date().toJSON().split('T')[0];  // e.g. '2022-11-08'
+  console.log('\n::: Pending Tasks Worker Function - Begin :::', args, context, '\n');
+  const currentDay = new Date().getDay(); // e.g. 1 (Monday), 2 (Tuesday), etc.
+  const currentDate = new Date().toJSON().split('T')[0]; // e.g. '2022-11-08'
   console.log('current date', currentDate);
   console.log('current day of week', currentDay);
 
@@ -20,7 +20,7 @@ export async function workerFunction(args, context) {
         has: currentDay,
       },
       status: 'pending',
-    }
+    },
   });
 
   const allTasks = [...deadlinedTasks, ...recurringTasks];
@@ -29,12 +29,15 @@ export async function workerFunction(args, context) {
     return;
   }
 
-  return Promise.all(allTasks.map(async(task) => {
-    await sendEmail(task);
-    const completeTask = await markAsCompleted(task, context);
-    console.log('Sent email for task: ', completeTask);
-    return;
-  }))
+  return Promise.all(
+    allTasks.map(async (task) => {
+      await sendEmail(task);
+      if (task.deadline.length) {
+        const completeTask = await markAsCompleted(task, context);
+      }
+      return;
+    })
+  );
 }
 
 export async function sendEmail(task) {
@@ -57,7 +60,7 @@ export async function sendEmail(task) {
     html: `${task.message}`,
   });
 
-  console.log(`Email URL: ${nodemailer.getTestMessageUrl(info)}`);
+  console.log(`${task.name} email sent! URL: ${nodemailer.getTestMessageUrl(info)}`);
 }
 
 async function markAsCompleted(task, context) {

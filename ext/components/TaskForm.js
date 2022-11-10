@@ -1,4 +1,6 @@
 import React from 'react';
+import { CgInfo } from 'react-icons/cg';
+import Tooltip from 'react-simple-tooltip';
 import createTask from '@wasp/actions/createTask';
 
 const daysOfWeek = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
@@ -12,7 +14,6 @@ const TaskForm = () => {
       return document.getElementById(day);
     });
     deadline = document.getElementById('deadline');
-    console.log('days', days.map(d => d.id));
   }, []);
 
   const handleSubmit = async (event) => {
@@ -22,24 +23,21 @@ const TaskForm = () => {
       const email = event.target.email.value;
       const message = event.target.message.value;
       const deadline = event.target.deadline?.value;
+      // Map the days of the week to their index number
+      // for storage in db, e.g. [0: Su, 1:M, ...]]
+      const recurring = days.filter((day) => day.checked).map((day) => daysOfWeek.findIndex((d) => d === day.id));
 
-
-      const recurring = days
-        .filter((day) => day.checked)
-        .map((day) => daysOfWeek.findIndex((d) => d === day.id));
-
-      console.log('recurring', recurring);
-      console.log('deadline', deadline);
-      console.log('name', name);
-      console.log('email', email);
-      console.log('message', message);
-
-      await createTask({ name, email, message, deadline, recurring });
-      // event.target.reset();
+      const task = await createTask({ name, email, message, deadline, recurring });
+      console.log('Task created: ', task);
+      window.alert('Task created successfully!');
+      setRecurring(false);
+      event.target.reset();
     } catch (err) {
-      window.alert('Error: ' + err.message);
-    }
+      // parse the thrown error from createAction within actions.js
+      window.alert(err.data.message);
   };
+
+  }
 
   const isRecurring = (event) => {
     console.log('deadline', deadline);
@@ -55,15 +53,26 @@ const TaskForm = () => {
     }
   };
 
-  // return a form with a text input and a submit button
   return (
     <form onSubmit={handleSubmit}>
+      <div>
+        <Tooltip
+          style={{ width: '10px'}}
+          content='An email reminder will be sent on the deadline or recurring days
+          you select...'
+          placement='bottom'
+        >
+          <CgInfo />
+        </Tooltip>
+        <h3 style={{ display: 'inline-block' }}>Schedule a Task Reminder:</h3>
+      </div>
+      <span className='info'></span>
       <label htmlFor='name'>Task</label>
-      <input type='text' id='name' placeholder='name' />
+      <input type='text' id='name' placeholder='name of task' />
       <label htmlFor='email'>Email of Responsible Person</label>
       <input type='email' id='email' placeholder='email address' />
       <label htmlFor='message'>Message</label>
-      <input type='text' id='message' placeholder='message' />
+      <input type='text' id='message' placeholder='message to be sent' />
       <div>
         <label htmlFor='deadline'>One-time Deadline: </label>
         <input type='date' id='deadline' disabled={recurring} />
@@ -78,7 +87,6 @@ const TaskForm = () => {
           </label>
         ))}
       </div>
-
       <button type='submit' className='button button-outline'>
         Submit
       </button>

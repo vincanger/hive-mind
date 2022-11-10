@@ -1,14 +1,12 @@
 import React from 'react';
-import './Main.css';
 import NavBar from './components/NavBar';
-import TaskForm from './components/TaskForm';
 
 const AboutPage = () => {
   return (
     <div className='container'>
       <NavBar />
       <main>
-        <span>🐢🐢🐢🐢🐢🐢🐢</span>
+        <span >🐢🐢🐢🐢🐢🐢🐢</span>
         <div className='buttons'>
           <a
             className='button button-filled'

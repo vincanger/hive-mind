@@ -4,8 +4,9 @@ app HiveMind {
     system: PostgreSQL
   },
   dependencies: [
-    ("nodemailer", "^6.8.0"),
-    ("react-icons", "^4.6.0"),
+    ("nodemailer", "6.8.0"),
+    ("react-icons", "4.6.0"),
+    ("react-simple-tooltip", "2.6.3")
   ]
 }
 
@@ -15,7 +16,7 @@ job emailSender {
     fn: import { workerFunction } from "@ext/workers/emailSender.js"
   },
   schedule: {
-    cron: "* * * * *" // every minute
+    cron: "0 * * * *" // every hour
   },
   entities: [Task]
 }
@@ -41,6 +42,21 @@ page MainPage {
 route About { path: "/about", to: AboutPage }
 page AboutPage {
   component: import About from "@ext/AboutPage.js"
+}
+
+route Tasks { path: "/tasks", to: TasksPage }
+page TasksPage {
+  component: import Tasks from "@ext/TasksPage.js"
+}
+
+query getPendingTasks {
+  fn: import { getPendingTasks } from "@ext/queries.js",
+  entities: [Task]
+}
+
+query getCompletedTasks {
+  fn: import { getCompletedTasks } from "@ext/queries.js",
+  entities: [Task]
 }
 
 action createTask {
