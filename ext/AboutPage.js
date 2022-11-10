@@ -10,7 +10,7 @@ const AboutPage = () => {
         <div className='buttons'>
           <a
             className='button button-filled'
-            href='https://wasp-lang.dev/docs/tutorials/todo-app'
+            href='https://wasp-lang.dev/docs'
             target='_blank'
             rel='noreferrer noopener'
           >
