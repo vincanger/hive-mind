@@ -57,7 +57,7 @@ const TaskForm = () => {
     <form onSubmit={handleSubmit}>
       <div>
         <Tooltip
-          style={{ width: '10px'}}
+          style={{ width: '10px' }}
           content='An email reminder will be sent on the deadline or recurring days
           you select...'
           placement='bottom'
@@ -90,6 +90,9 @@ const TaskForm = () => {
       <button type='submit' className='button button-outline'>
         Submit
       </button>
+      <a href='/login' style={{  alignSelf: 'flex-end', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+        Logout
+      </a>
     </form>
   );
 };

@@ -1,5 +1,17 @@
 app HiveMind {
   title: "HiveMind",
+  auth: {
+    // Expects entity User to have (username:String) and (password:String) fields.
+    userEntity: User,
+    externalAuthEntity: SocialLogin,
+    methods: {
+      google: {
+        getUserFieldsFn: import { getUserFields } from "@ext/auth/google.js"
+      }
+    },
+    onAuthFailedRedirectTo: "/login",
+    onAuthSucceededRedirectTo: "/",
+  },
   db: {
     system: PostgreSQL
   },
@@ -10,16 +22,41 @@ app HiveMind {
   ]
 }
 
-job emailSender {
+job sendTaskReminder {
   executor: PgBoss, 
   perform: {
-    fn: import { workerFunction } from "@ext/workers/emailSender.js"
+    fn: import { emailSender } from "@ext/workers/emailSender.js"
+  },
+}
+
+job findPendingTasks {
+  executor: PgBoss,
+  perform: {
+    fn: import { findTasksToSend } from "@ext/workers/findTasksToSend.js"
   },
   schedule: {
-    cron: "0 * * * *" // every hour
+    cron: "0 5,17 * * *" // On the hours 5:00 and 17:00.
   },
   entities: [Task]
 }
+
+entity User {=psl
+    id          Int     @id @default(autoincrement())
+    username    String  @unique
+    password    String  
+    isAuthComplete    Boolean @default(false)
+    externalAuthAssociations SocialLogin[]
+psl=}
+
+entity SocialLogin {=psl
+  id          Int       @id @default(autoincrement())
+  provider    String
+  providerId  String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  createdAt   DateTime  @default(now())
+  @@unique([provider, providerId, userId])
+psl=}
 
 // [] or ? -- Note: You cannot combine type modifiers - optional lists are not supported.
 entity Task {=psl
@@ -36,7 +73,13 @@ psl=}
 
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
+  authRequired: true,
   component: import Main from "@ext/MainPage.js"
+}
+
+route LoginRoute { path: "/login", to: LoginPage }
+page LoginPage {
+  component: import Login from "@ext/LoginPage.js"
 }
 
 route About { path: "/about", to: AboutPage }
@@ -46,6 +89,7 @@ page AboutPage {
 
 route Tasks { path: "/tasks", to: TasksPage }
 page TasksPage {
+  authRequired: true,
   component: import Tasks from "@ext/TasksPage.js"
 }
 

@@ -1,2 +1,5 @@
 /.wasp/
 /.env
+
+# Local Netlify folder
+.netlify

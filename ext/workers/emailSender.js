@@ -1,46 +1,22 @@
 import nodemailer from 'nodemailer';
 
-export async function workerFunction(args, context) {
-  console.log('\n::: Pending Tasks Worker Function - Begin :::', args, context, '\n');
-  const currentDay = new Date().getDay(); // e.g. 1 (Monday), 2 (Tuesday), etc.
-  const currentDate = new Date().toJSON().split('T')[0]; // e.g. '2022-11-08'
-  console.log('current date', currentDate);
-  console.log('current day of week', currentDay);
+export async function emailSender(task, context) {
+  console.log('\n::: Email Sender Worker Function - Begin :::', '\n');
 
-  const deadlinedTasks = await context.entities.Task.findMany({
-    where: {
-      deadline: currentDate,
-      status: 'pending',
-    },
-  });
-
-  const recurringTasks = await context.entities.Task.findMany({
-    where: {
-      recurring: {
-        has: currentDay,
-      },
-      status: 'pending',
-    },
-  });
-
-  const allTasks = [...deadlinedTasks, ...recurringTasks];
-  if (allTasks.length === 0) {
-    console.log('No tasks to send emails for!');
-    return;
+  try {
+    await sendEmail(task);
+    if (task.deadline.length) {
+      await markAsCompleted(task, context);
+    }
+  } catch (error) {
+    console.error('Error sending email', task.id, error);
   }
 
-  return Promise.all(
-    allTasks.map(async (task) => {
-      await sendEmail(task);
-      if (task.deadline.length) {
-        const completeTask = await markAsCompleted(task, context);
-      }
-      return;
-    })
-  );
+  console.log('\n::: Email Sender Worker Function - End :::\n');
+  return;
 }
 
-export async function sendEmail(task) {
+async function sendEmail(task) {
   const testAccount = await nodemailer.createTestAccount();
 
   const transporter = nodemailer.createTransport({

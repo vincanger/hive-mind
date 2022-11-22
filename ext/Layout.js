@@ -1,18 +1,16 @@
 import React from 'react';
-import './Main.css';
 import NavBar from './components/NavBar';
-import TaskForm from './components/TaskForm';
 import MobileFooter from './components/MobileFooter';
 
-const MainPage = () => {
+const Layout = ({ children }) => {
   return (
     <div className='container'>
       <NavBar />
       <main>
-        <TaskForm />
+        {children}
       </main>
       <MobileFooter />
     </div>
   );
 };
-export default MainPage;
+export default Layout;

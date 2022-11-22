@@ -1,6 +1,6 @@
 import React from 'react';
+import Layout from './Layout';
 import { Link } from 'react-router-dom';
-import NavBar from './components/NavBar';
 import { useQuery } from '@wasp/queries';
 import getPendingTasks from '@wasp/queries/getPendingTasks';
 import getCompletedTasks from '@wasp/queries/getCompletedTasks';
@@ -12,9 +12,7 @@ const TasksPage = () => {
   // TODO: add pagination and sorting by status, recurring, etc, instead of two lists
 
   return (
-    <div className='container'>
-      <NavBar />
-      <main >
+    <Layout>
         <Link to='/' style={{marginTop: '0.5rem'}}>Go back and add a Task 🐢</Link>
         <div className='tasks'>
           {isLoading && compLoading && <div>Loading...</div>}
@@ -48,8 +46,7 @@ const TasksPage = () => {
             </div>
           )}
         </div>
-      </main>
-    </div>
+      </Layout>
   );
 };
 export default TasksPage;

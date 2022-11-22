@@ -1,9 +1,9 @@
 import { isPrismaError, prismaErrorToHttpError } from '@wasp/utils.js';
 
 export const createTask = async ({ name, email, message, deadline, recurring }, context) => {
-  // if (!context.user) {
-  //   throw new HttpError(401);
-  // }
+  if (!context.user) {
+    throw new HttpError(401);
+  }
   try {
     return await context.entities.Task.create({
       data: {
@@ -12,7 +12,6 @@ export const createTask = async ({ name, email, message, deadline, recurring }, 
         message,
         deadline,
         recurring,
-        // user: { connect: { id: context.user.id } },
       },
     });
   } catch (e) {
