@@ -19,6 +19,9 @@ export const getPendingTasks = async (args, context) => {
 };
 
 export const getCompletedTasks = async (args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
   return await context.entities.Task.findMany({
     where: {
       status: 'completed',
