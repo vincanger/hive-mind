@@ -14,6 +14,9 @@ export const getPendingTasks = async (args, context) => {
       name: true,
       email: true,
       message: true,
+      recurring: true,
+      deadline: true,
+      emailUrl: true,
     },
   });
 };

@@ -4,10 +4,18 @@ import Layout from './Layout';
 const AboutPage = () => {
   return (
     <Layout>
-      <span>🐢🐢🐢🐢🐢🐢🐢</span>
+      <span>🐢 🐝 🐢</span>
+      <div style={{ maxWidth: '75%', marginTop: '1rem', textAlign: 'center' }}>
+        Example app built with Wasp to highlight Wasp's easy-to-setup:
+      </div>
+        <ul>
+          <li>auth,</li>
+          <li>state management,</li>
+          <li>and async cron jobs 💪</li>
+        </ul>
       <div className='buttons'>
         <a className='button button-filled' href='https://wasp-lang.dev/docs' target='_blank' rel='noreferrer noopener'>
-          Take the Tutorial
+          Find More Tutorials
         </a>
         <a
           className='button button-outline'

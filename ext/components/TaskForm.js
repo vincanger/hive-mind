@@ -26,9 +26,7 @@ const TaskForm = () => {
       // Map the days of the week to their index number
       // for storage in db, e.g. [0: Su, 1:M, ...]]
       const recurring = days.filter((day) => day.checked).map((day) => daysOfWeek.findIndex((d) => d === day.id));
-
-      const task = await createTask({ name, email, message, deadline, recurring });
-      console.log('Task created: ', task);
+      await createTask({ name, email, message, deadline, recurring });
       window.alert('Task created successfully!');
       setRecurring(false);
       event.target.reset();
@@ -40,13 +38,11 @@ const TaskForm = () => {
   }
 
   const isRecurring = (event) => {
-    console.log('deadline', deadline);
     if (event.target.checked) {
       setRecurring(true);
       deadline.value = null;
     } else {
       const checkedDays = days.filter((day) => day.checked);
-      console.log('checked days', checkedDays);
       if (checkedDays.length === 0) {
         setRecurring(false);
       }

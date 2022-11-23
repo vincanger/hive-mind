@@ -2,18 +2,18 @@ import nodemailer from 'nodemailer';
 
 export async function emailSender(task, context) {
   console.log('\n::: Email Sender Worker Function - Begin :::', '\n');
-
+  let sentEmailURL;
   try {
-    await sendEmail(task);
+    sentEmailURL = await sendEmail(task);
     if (task.deadline.length) {
       await markAsCompleted(task, context);
     }
+    await updateEmailUrl(task, context);
   } catch (error) {
     console.error('Error sending email', task.id, error);
   }
-
   console.log('\n::: Email Sender Worker Function - End :::\n');
-  return;
+  return sentEmailURL;
 }
 
 async function sendEmail(task) {
@@ -35,8 +35,9 @@ async function sendEmail(task) {
     subject: `Task Reminder -- ${task.name}`,
     html: `${task.message}`,
   });
-
-  console.log(`${task.name} email sent! URL: ${nodemailer.getTestMessageUrl(info)}`);
+  const url = nodemailer.getTestMessageUrl(info);
+  console.log(`${task.name} email sent! URL: ${url}`);
+  return url;
 }
 
 async function markAsCompleted(task, context) {
@@ -46,6 +47,17 @@ async function markAsCompleted(task, context) {
     },
     data: {
       status: 'completed',
+    },
+  });
+}
+
+async function updateEmailUrl(task, context) {
+  return await context.entities.Task.update({
+    where: {
+      id: task.id,
+    },
+    data: {
+      emailUrl: sentEmailURL,
     },
   });
 }

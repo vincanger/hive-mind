@@ -7,21 +7,6 @@ import Layout from './Layout';
 const LoginPage = () => {
   const { data: user, isLoading, status } = useAuth();
 
-  React.useEffect(() => {
-    console.log('user >>>>>', user);
-    console.log('isLoading >>>>>', isLoading);
-    console.log('status >>>>>', status);
-  }, [user, isLoading, status]);
-
-  // if (isLoading) {
-  //   return (
-  //     <Layout>
-  //       <button disabled='true' className='button button-outline' style={{ padding: '1.7rem 7.6rem' }}>
-  //       </button>
-  //     </Layout>
-  //   );
-  // }
-
   if (!user) {
     return (
       <Layout>

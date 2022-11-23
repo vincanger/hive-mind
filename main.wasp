@@ -27,6 +27,7 @@ job sendTaskReminder {
   perform: {
     fn: import { emailSender } from "@ext/workers/emailSender.js"
   },
+  entities: [Task]
 }
 
 job findPendingTasks {
@@ -35,7 +36,7 @@ job findPendingTasks {
     fn: import { findTasksToSend } from "@ext/workers/findTasksToSend.js"
   },
   schedule: {
-    cron: "0 5,17 * * *" // On the hours 5:00 and 17:00.
+    cron: "0 5,17 * * *" // Every day at 5:00 and 17:00. 
   },
   entities: [Task]
 }
@@ -69,6 +70,7 @@ entity Task {=psl
     email       String
     deadline    String
     recurring   Int[]
+    emailUrl    String?
 psl=}
 
 route RootRoute { path: "/", to: MainPage }

@@ -53,6 +53,11 @@ h3 {
   margin: 0.25rem;
 }
 
+ol li,
+ul li  {
+  padding: .35rem 0;
+}
+
 .nav {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
