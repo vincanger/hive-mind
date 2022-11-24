@@ -8,16 +8,7 @@ export const getPendingTasks = async (args, context) => {
     },
     orderBy: {
       id: 'asc',
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      message: true,
-      recurring: true,
-      deadline: true,
-      emailUrl: true,
-    },
+    }
   });
 };
 
@@ -31,12 +22,6 @@ export const getCompletedTasks = async (args, context) => {
     },
     orderBy: {
       id: 'asc',
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      message: true,
-    },
+    }
   });
 };
