@@ -36,7 +36,7 @@ job findPendingTasks {
     fn: import { findTasksToSend } from "@ext/workers/findTasksToSend.js"
   },
   schedule: {
-    cron: "0 5,17 * * *" // Every day at 5:00 and 17:00. 
+    cron: "0 4,16 * * *" // Every day at 4:00 and 16:00. 
   },
   entities: [Task]
 }

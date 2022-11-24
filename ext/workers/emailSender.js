@@ -8,7 +8,7 @@ export async function emailSender(task, context) {
     if (task.deadline.length) {
       await markAsCompleted(task, context);
     }
-    await updateEmailUrl(task, context);
+    await updateEmailUrl(sentEmailURL, task, context);
   } catch (error) {
     console.error('Error sending email', task.id, error);
   }
@@ -51,7 +51,7 @@ async function markAsCompleted(task, context) {
   });
 }
 
-async function updateEmailUrl(task, context) {
+async function updateEmailUrl(sentEmailURL, task, context) {
   return await context.entities.Task.update({
     where: {
       id: task.id,
