@@ -1,4 +1,7 @@
 app HiveMind {
+  wasp: {
+    version: "^0.7.0"
+  },
   title: "HiveMind",
   auth: {
     // Expects entity User to have (username:String) and (password:String) fields.
