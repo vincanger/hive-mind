@@ -9,7 +9,7 @@ app HiveMind {
     externalAuthEntity: SocialLogin,
     methods: {
       google: {
-        getUserFieldsFn: import { getUserFields } from "@ext/auth/google.js"
+        getUserFieldsFn: import { getUserFields } from "@server/auth/google.js"
       }
     },
     onAuthFailedRedirectTo: "/login",
@@ -28,7 +28,7 @@ app HiveMind {
 job sendTaskReminder {
   executor: PgBoss, 
   perform: {
-    fn: import { emailSender } from "@ext/workers/emailSender.js"
+    fn: import { emailSender } from "@server/workers/emailSender.js"
   },
   entities: [Task]
 }
@@ -36,7 +36,7 @@ job sendTaskReminder {
 job findPendingTasks {
   executor: PgBoss,
   perform: {
-    fn: import { findTasksToSend } from "@ext/workers/findTasksToSend.js"
+    fn: import { findTasksToSend } from "@server/workers/findTasksToSend.js"
   },
   schedule: {
     cron: "0 4,16 * * *" // Every day at 4:00 and 16:00. 
@@ -79,36 +79,36 @@ psl=}
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
   authRequired: true,
-  component: import Main from "@ext/MainPage.js"
+  component: import Main from "@client/MainPage.js"
 }
 
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
-  component: import Login from "@ext/LoginPage.js"
+  component: import Login from "@client/LoginPage.js"
 }
 
 route About { path: "/about", to: AboutPage }
 page AboutPage {
-  component: import About from "@ext/AboutPage.js"
+  component: import About from "@client/AboutPage.js"
 }
 
 route Tasks { path: "/tasks", to: TasksPage }
 page TasksPage {
   authRequired: true,
-  component: import Tasks from "@ext/TasksPage.js"
+  component: import Tasks from "@client/TasksPage.js"
 }
 
 query getPendingTasks {
-  fn: import { getPendingTasks } from "@ext/queries.js",
+  fn: import { getPendingTasks } from "@server/queries.js",
   entities: [Task]
 }
 
 query getCompletedTasks {
-  fn: import { getCompletedTasks } from "@ext/queries.js",
+  fn: import { getCompletedTasks } from "@server/queries.js",
   entities: [Task]
 }
 
 action createTask {
-  fn: import { createTask } from "@ext/actions.js",
+  fn: import { createTask } from "@server/actions.js",
   entities: [Task]
 }

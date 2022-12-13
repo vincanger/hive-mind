@@ -68,13 +68,15 @@ const TasksPage = () => {
                 return (
                   <>
                     <li key={task.id}>
-                      <code>{task.name}</code>: 
-                      <a target='_blank' href={task.emailUrl}>
+                      <code>{task.name}</code>:
+                      <a target='_blank' rel='noreferrer' href={task.emailUrl}>
                         nodemailer email preview'
                       </a>
                     </li>
                   </>
                 );
+              } else {
+                return null;
               }
             })}
         </ul>

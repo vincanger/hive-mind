@@ -1,5 +1,10 @@
 /.wasp/
 /.env
+/.env.server
+/.env.client
+/.docker-compose.yml
+/fly.toml
 
 # Local Netlify folder
 .netlify
+

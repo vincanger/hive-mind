@@ -5,7 +5,7 @@ import logout from '@wasp/auth/logout.js';
 import Layout from './Layout';
 
 const LoginPage = () => {
-  const { data: user, isLoading, status } = useAuth();
+  const { data: user, isLoading } = useAuth();
 
   if (!user) {
     return (
